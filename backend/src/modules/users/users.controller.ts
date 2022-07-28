@@ -1,6 +1,19 @@
 import { Roles } from "@common/decorators";
 import { JwtAuthGuard } from "@common/guard/jwt-auth.guard";
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards, UsePipes, ValidationPipe, Version } from "@nestjs/common";
+import {
+	Body,
+	Controller,
+	Get,
+	HttpCode,
+	HttpStatus,
+	Post,
+	Req,
+	Res,
+	UseGuards,
+	UsePipes,
+	ValidationPipe,
+	Version
+} from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Request, Response } from "express";
 import { AssignMenuDto } from "./dto/assign-menus.dto";
@@ -18,26 +31,25 @@ export class UsersController {
 	@Version("1")
 	@HttpCode(HttpStatus.OK)
 	async profile(@Req() req: Request, @Res() res: Response) {
-        const user = req.user
-		const result = user
-        
+		const result = req.user
+
 		res.json({
             statusCode: HttpStatus.OK,
 			message: "user profile success",
 			data: result
 		})
 	}
-    
-    @Roles('Adminstrator')
+
+    @Roles('admin')
     @Post('assign-permissions')
     @Version("1")
     @HttpCode(HttpStatus.CREATED)
     @UsePipes(new ValidationPipe({ transform: true }))
     async assignPermission(
-        @Body() assinDto: AssignPermissionDto, 
+        @Body() assignDto: AssignPermissionDto,
         @Req() req: Request, @Res() res: Response
         ){
-        const {...result} = assinDto
+		const result = await this.userService.assignPermissionsUser(assignDto)
 
         res.json({
 			statusCode: HttpStatus.OK,
@@ -45,21 +57,21 @@ export class UsersController {
 			data: result
 		})
     }
-    
+
     @Roles('Admin')
     @Post('assign-menus')
     @Version("1")
     @HttpCode(HttpStatus.CREATED)
     @UsePipes(new ValidationPipe({ transform: true }))
     async assignUserMenu(
-        @Body() assinDto: AssignMenuDto, 
+        @Body() assignDto: AssignMenuDto,
         @Req() req: Request, @Res() res: Response
     ){
-        const {...result} = assinDto
+        const result = await this.userService.assignMenuUser(assignDto)
 
         res.json({
 			statusCode: HttpStatus.OK,
-			message: "user assign permissions success",
+			message: "user assign menus success",
 			data: result
 		})
     }

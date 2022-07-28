@@ -15,6 +15,9 @@ import { UsersTokens } from "@entities/users-tokens.entity"
 import { UpdateTokenDto } from "@modules/users/dto/update-token.dto"
 import { validateUserDto } from "@modules/users/dto/validate-user.dto"
 import { UsersPermissions } from "@entities/users-permissions.entity"
+import { AssignMenuDto } from "@modules/users/dto/assign-menus.dto"
+import { UsersMenus } from "@entities/users-menus.entity"
+import { AssignPermissionDto } from "@modules/users/dto/assign-permission.dto"
 
 @Injectable()
 export class UsersService {
@@ -27,6 +30,8 @@ export class UsersService {
 		private tokenRepository: Repository<UsersTokens>,
 		@InjectRepository(UsersPermissions)
 		private permissionRepository: Repository<UsersPermissions>,
+		@InjectRepository(UsersMenus)
+		private userMenuRepository: Repository<UsersMenus>,
 		private dataSource: DataSource
 	) {}
 
@@ -69,7 +74,7 @@ export class UsersService {
 				username: username
 			},
 			relations: {
-				role: true,
+				role: true
 			}
 		})
 
@@ -85,7 +90,7 @@ export class UsersService {
 			where: {
 				id: userId
 			},
-			relations:{
+			relations: {
 				role: true
 			}
 		})
@@ -235,10 +240,11 @@ export class UsersService {
 	async userPermissions(userId: string) {
 		try {
 			return await this.permissionRepository.query(
-				`SELECT p.id, p.name
-					 FROM users_permissions up
-			    LEFT JOIN permissions p ON up.permission_id = p.id
-			        WHERE up.user_id = ?`,
+				`SELECT p.id, p.name, m.meta_title
+						  FROM users_permissions up
+						LEFT JOIN permissions p ON up.permission_id = p.id
+						INNER JOIN menus m ON up.menu_id = m.id
+			          WHERE up.user_id = ?`,
 				[userId]
 			)
 		} catch (e) {
@@ -251,5 +257,24 @@ export class UsersService {
 		const userToken = await this.findRefreshToken(refreshToken)
 
 		return await this.tokenRepository.remove(userToken)
+	}
+
+	//TODO: save user menus
+	async assignPermissionsUser(assignDto: AssignPermissionDto) {
+		const permission = new UsersPermissions()
+		permission.user = assignDto.user_id
+		permission.menu = assignDto.menu_id
+		permission.permission = assignDto.permission_id
+
+		return await this.permissionRepository.save(permission)
+	}
+
+	//TODO: save user menus
+	async assignMenuUser(assignDto: AssignMenuDto) {
+		const menu = new UsersMenus()
+		menu.user = assignDto.user_id
+		menu.menu = assignDto.menu_id
+
+		return await this.userMenuRepository.save(menu)
 	}
 }

@@ -88,10 +88,10 @@ export class AuthService {
 			throw new BadRequestException("Refresh Token expire")
 		}
 
-		const {role, ...user} = await this.userService.findById(decode.id)
+		const { role, ...user } = await this.userService.findById(decode.id)
 		const permission = await this.getPermissions(user.id)
 
-		const rol:any = role
+		const rol: any = role
 
 		const payload = {
 			id: user.id,
@@ -128,7 +128,7 @@ export class AuthService {
 		console.log("permission", permissions)
 
 		for (let i = 0; i < permissions.length; i++) {
-			arr.push(permissions[i].name)
+			arr.push(permissions[i].meta_title+"."+permissions[i].name)
 		}
 
 		return arr

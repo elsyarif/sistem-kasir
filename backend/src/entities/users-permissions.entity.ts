@@ -2,7 +2,6 @@ import {
 	Entity,
 	JoinColumn,
 	ManyToOne,
-	OneToOne,
 	PrimaryGeneratedColumn
 } from "typeorm";
 import { Users } from "@entities/users.entity";
@@ -30,7 +29,7 @@ export class UsersPermissions {
 	})
 	menu: number;
 
-	@OneToOne(() => Permissions)
+	@ManyToOne(() => Permissions)
 	@JoinColumn({
 		name: "permission_id",
 		referencedColumnName: 'id',

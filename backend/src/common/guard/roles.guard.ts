@@ -1,7 +1,7 @@
-import { IS_PUBLIC_KEY, ROLES_KEY } from "@common/decorators";
-import { Roles } from "@entities/roles.entity";
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
+import { IS_PUBLIC_KEY, ROLES_KEY } from "@common/decorators"
+import { Roles } from "@entities/roles.entity"
+import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common"
+import { Reflector } from "@nestjs/core"
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -10,28 +10,25 @@ export class RolesGuard implements CanActivate {
 	canActivate(context: ExecutionContext): boolean {
 		const requiredRoles = this.reflector.getAllAndOverride<Roles[]>(
 			ROLES_KEY,
-			[context.getHandler(), context.getClass()],
-		);
-
-		const { user } = context.switchToHttp().getRequest();
+			[context.getHandler(), context.getClass()]
+		)
 
 		const isPublic = this.reflector.getAllAndOverride<boolean>(
-			IS_PUBLIC_KEY, [
-				context.getHandler(),
-				context.getClass()
-			]
+			IS_PUBLIC_KEY,
+			[context.getHandler(), context.getClass()]
 		)
-		
-		if(isPublic){
+
+		if (isPublic) {
 			return true
 		}
 
 		if (!requiredRoles) {
-			return false;
+			return false
 		}
+		const { user } = context.switchToHttp().getRequest()
 
-		return requiredRoles.some((role) =>{
-			console.log('RoleGuard: ', role)
+		return requiredRoles.some((role) => {
+			console.log("RoleGuard: ", role)
 
 			user.role?.includes(role)
 		})
