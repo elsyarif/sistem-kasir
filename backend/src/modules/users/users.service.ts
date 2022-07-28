@@ -67,6 +67,9 @@ export class UsersService {
 		const user = await this.userRepository.findOne({
 			where: {
 				username: username
+			},
+			relations: {
+				role: true,
 			}
 		})
 
@@ -78,8 +81,13 @@ export class UsersService {
 	}
 
 	async findById(userId: string): Promise<Users> {
-		const user = await this.userRepository.findOneBy({
-			id: userId
+		const user = await this.userRepository.findOne({
+			where: {
+				id: userId
+			},
+			relations:{
+				role: true
+			}
 		})
 
 		if (!user) {

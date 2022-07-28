@@ -23,6 +23,7 @@ import { SuppliersModule } from "@modules/suppliers/suppliers.module"
 		}),
 		TypeOrmModule.forRoot(DatabaseConfig),
 		AuthModule,
+		UsersModule,
 		MenusModule,
 		PermissionsModule
 	],

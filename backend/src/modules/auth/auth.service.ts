@@ -50,7 +50,7 @@ export class AuthService {
 		const payload = {
 			id: user.id,
 			username: user.username,
-			role: user.role,
+			role: user.role.name,
 			permissions: permission
 		}
 
@@ -88,13 +88,15 @@ export class AuthService {
 			throw new BadRequestException("Refresh Token expire")
 		}
 
-		const user = await this.userService.findById(decode.id)
+		const {role, ...user} = await this.userService.findById(decode.id)
 		const permission = await this.getPermissions(user.id)
+
+		const rol:any = role
 
 		const payload = {
 			id: user.id,
 			username: user.username,
-			role: user.role,
+			role: rol.name,
 			permissions: permission
 		}
 
