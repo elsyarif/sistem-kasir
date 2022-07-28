@@ -23,7 +23,8 @@ import { SuppliersModule } from "@modules/suppliers/suppliers.module"
 		}),
 		TypeOrmModule.forRoot(DatabaseConfig),
 		AuthModule,
-		MenusModule
+		MenusModule,
+		PermissionsModule
 	],
 	providers: [
 		{
