@@ -11,7 +11,6 @@ export class UsersMenus {
 	@JoinColumn({
 		name: "user_id",
 		referencedColumnName: "id",
-		foreignKeyConstraintName: "fk_menus_users"
 	})
 	user: string;
 
@@ -19,7 +18,6 @@ export class UsersMenus {
 	@JoinColumn({
 		name: "menu_id",
 		referencedColumnName: "id",
-		foreignKeyConstraintName: "fk_menus_user_menu"
 	})
 	menu: number;
 }

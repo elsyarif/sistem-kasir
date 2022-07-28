@@ -14,7 +14,4 @@ export class RegisterUsersDto {
 	@ApiProperty()
 	@IsNotEmpty()
 	password: string;
-
-	@ApiProperty()
-	role: string;
 }

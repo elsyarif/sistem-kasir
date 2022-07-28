@@ -50,7 +50,7 @@ export class UsersService {
 			user.username = registerDto.username
 			user.password = registerDto.password
 			await user.hashPassword()
-			user.role = registerDto.role
+			user.role = null
 			user.is_active = false
 
 			return await this.userRepository.save(user)

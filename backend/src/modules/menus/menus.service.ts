@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common"
+import { Injectable, Logger, NotFoundException } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { Menus } from "@entities/menus.entity"
 import { Repository } from "typeorm"
@@ -36,9 +36,36 @@ export class MenusService {
 		)
 	}
 
-	async findOne(menuId: number) {}
+	async findOne(menuId: number) {
+		const menu = await this.menuRepository.findOne({
+			where: {
+				id: menuId
+			}
+		})
 
-	async update(id: number, updateDto: UpdateMenuDto) {}
+		if(!menu){
+			throw new NotFoundException('menu not found')
+		}
+
+		return menu
+	}
+
+	async update(id: number, updateDto: UpdateMenuDto) {
+		const menu = await this.menuRepository.findOneBy({
+			id: id
+		})
+
+		this.logger.warn(updateDto.is_active)
+
+		menu.title = updateDto.title || menu.title
+		menu.icon = updateDto.icon || menu.icon
+		menu.link = updateDto.link || menu.link
+		menu.is_active = updateDto.is_active !== undefined ?  updateDto.is_active : menu.is_active
+		menu.sort = updateDto.sort || menu.sort
+		menu.assignMetaTitle()
+
+		return await this.menuRepository.save(menu)
+	}
 
 	async remove(id: string) {}
 
@@ -50,5 +77,61 @@ export class MenusService {
 		console.log(sort)
 		this.logger.verbose(sort.n)
 		return sort.n
+	}
+
+	async findMenuByUser(userId: string){
+		try {
+			const userMenu = await this.menuRepository.query(
+				`SELECT m.id, m.parent_id , m.title, m.meta_title, m.icon, m.link, m.sort
+					FROM users_menus um
+				left Join menus m ON um.menu_id = m.id
+				WHERE m.is_active = TRUE
+				AND um.user_id = ?
+				ORDER BY m.sort`, [userId]
+			)
+
+			const mainMenu = []
+			for (let i = 0; i < userMenu.length; i++) {
+				mainMenu[userMenu[i].id] = {
+					id: userMenu[i].id,
+					parent_id: userMenu[i].parent_id,
+					title: userMenu[i].title,
+					meta_title: userMenu[i].meta_title,
+					icon: userMenu[i].icon,
+					link: userMenu[i].link,
+					sort: userMenu[i].sort,
+				}
+			}
+
+			return this.menuNode(mainMenu, 0)
+
+		} catch (error) {
+			this.logger.error(`findMenuByUser: ${error.message}`)
+		}
+	}
+
+
+	//TODO: Maping menu berdasarkan parent id dan menjadikan object
+	menuNode(menu: any[], parent: number){
+		const mainMenu = []
+
+		for (let i = 1; i < menu.length; i++) {
+			if(menu[i] == undefined) {i++}
+
+			if(menu[i] != undefined && menu[i].parent_id === parent){
+				mainMenu.push({
+					id: menu[i].id,
+					parent_id: menu[i].parent_id,
+					title: menu[i].title,
+					meta_title: menu[i].meta_title,
+					icon: menu[i].icon,
+					link: menu[i].link,
+					sort: menu[i].sort,
+					sub_menu: this.menuNode(menu, i)
+				})
+			}
+		}
+
+		return mainMenu
 	}
 }

@@ -21,12 +21,12 @@ export class UsersTokens {
 	user: string
 
 	@Column({
-		length: 500
+		type: 'text',
 	})
 	access_token: string
 
 	@Column({
-		length: 500
+		type: 'text'
 	})
 	refresh_token: string
 
