@@ -25,7 +25,8 @@ import { SuppliersModule } from "@modules/suppliers/suppliers.module"
 		AuthModule,
 		UsersModule,
 		MenusModule,
-		PermissionsModule
+		PermissionsModule,
+		RolesModule
 	],
 	providers: [
 		{

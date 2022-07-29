@@ -122,7 +122,6 @@ export class AuthService {
 		let arr = []
 
 		const permissions = await this.userService.userPermissions(userId)
-		console.log("permission", permissions)
 
 		for (let i = 0; i < permissions.length; i++) {
 			arr.push(permissions[i].meta_title+"."+permissions[i].name)
