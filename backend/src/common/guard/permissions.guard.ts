@@ -1,4 +1,6 @@
+import { RolesEnum } from "@common/action";
 import { PERMISSIONS_KEY } from "@common/decorators";
+import { UsersService } from "@modules/users/users.service";
 import { CanActivate, ExecutionContext, Injectable, Logger } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 
@@ -8,10 +10,13 @@ interface Permissions{}
 export class PermissionsGuard implements CanActivate{
 	private readonly logger = new Logger(PermissionsGuard.name)
 
-	constructor(private reflector: Reflector) {}
+	constructor(
+		private reflector: Reflector, 
+		private userService: UsersService
+	) {}
 
 	canActivate(context: ExecutionContext): boolean {
-	    const request   = context.switchToHttp().getRequest()
+	    const {user}   = context.switchToHttp().getRequest()
 
 	    const requiredPermissions = this.reflector.getAllAndOverride<Permissions[]>(
 			PERMISSIONS_KEY,[
@@ -20,8 +25,10 @@ export class PermissionsGuard implements CanActivate{
 			],
 		);
 
-		this.logger.verbose(requiredPermissions)
-		this.logger.verbose(request)
+		if(user.role === RolesEnum.ADMIN){
+			console.log('isAdmin :', user.role)
+			return true
+		}
 
 		if(!requiredPermissions){
 			return false
@@ -29,9 +36,10 @@ export class PermissionsGuard implements CanActivate{
 
 	    const resut = requiredPermissions.some((permissions) => {
 			console.log(permissions)
-			request.user.permissions?.includes(permissions)
+			return user.permissions?.includes(permissions)
 		})
 
+		console.log('pers:',resut)
 		return resut
 	}
 }

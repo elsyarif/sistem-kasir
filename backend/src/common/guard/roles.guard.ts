@@ -1,10 +1,13 @@
 import { IS_PUBLIC_KEY, ROLES_KEY } from "@common/decorators"
-import { Roles } from "@entities/roles.entity"
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common"
+import { CanActivate, ExecutionContext, Injectable, Logger } from "@nestjs/common"
 import { Reflector } from "@nestjs/core"
+import { Roles } from "@entities/roles.entity"
+import { RolesEnum } from "@common/action"
 
 @Injectable()
 export class RolesGuard implements CanActivate {
+	private readonly logger = new Logger(RolesGuard.name)
+
 	constructor(private reflector: Reflector) {}
 
 	canActivate(context: ExecutionContext): boolean {
@@ -22,15 +25,14 @@ export class RolesGuard implements CanActivate {
 			return true
 		}
 
+		this.logger.verbose(requiredRoles)
+
 		if (!requiredRoles) {
 			return false
 		}
+
 		const { user } = context.switchToHttp().getRequest()
 
-		return requiredRoles.some((role) => {
-			console.log("RoleGuard: ", role)
-
-			user.role?.includes(role)
-		})
+		return requiredRoles.some((role) => user.role?.includes(role))
 	}
 }

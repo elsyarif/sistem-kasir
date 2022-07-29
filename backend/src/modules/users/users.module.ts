@@ -24,10 +24,6 @@ import { RolesGuard } from '../../common/guard/roles.guard';
 	exports: [TypeOrmModule],
 	providers: [
 		UsersService,
-		{
-			provide: APP_GUARD,
-			useClass: RolesGuard
-		}
 	],
 	controllers: [UsersController]
 })

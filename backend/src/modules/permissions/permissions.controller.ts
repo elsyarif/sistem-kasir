@@ -22,19 +22,23 @@ import { Request, Response } from "express"
 import { CreatePermissionsDto } from "./dto/create-permissions.dto"
 import { UpdatePermissionsDto } from "./dto/update-permissions.dto"
 import { PermissionsService } from "./permissions.service"
-import { Permissions, Roles } from '@common/decorators'
+import { Permissions, Public, Roles } from '@common/decorators'
 import { PermissionsGuard } from "@common/guard/permissions.guard";
+import { RolesGuard } from "@common/guard/roles.guard"
+import { Action, RolesEnum } from "@common/action"
 
 @Controller("permissions")
 @ApiTags("Permissions")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(RolesGuard)
 @UseGuards(PermissionsGuard)
+@UseGuards(JwtAuthGuard)
 export class PermissionsController {
 	constructor(private permissionService: PermissionsService) {}
 
 	@Post()
 	@Version("1")
+	@Roles(RolesEnum.ADMIN)
 	@HttpCode(HttpStatus.CREATED)
 	@UsePipes(new ValidationPipe({ transform: true }))
 	async create(
@@ -51,8 +55,9 @@ export class PermissionsController {
 		})
 	}
 
-	@Roles("permissions.read")
 	@Get()
+	@Roles(RolesEnum.ADMIN, RolesEnum.KASIR)
+	@Permissions(Action.PERMISSIONS_READ)
 	@Version("1")
 	@HttpCode(HttpStatus.OK)
 	async findAll(@Req() req: Request, @Res() res: Response) {
@@ -66,6 +71,8 @@ export class PermissionsController {
 	}
 
 	@Get(":id")
+	@Roles(RolesEnum.ADMIN, RolesEnum.KASIR)
+	@Permissions(Action.PERMISSIONS_READ)
 	@Version("1")
 	@HttpCode(HttpStatus.OK)
 	async findOne(

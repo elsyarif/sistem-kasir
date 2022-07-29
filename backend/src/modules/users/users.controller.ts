@@ -1,5 +1,3 @@
-import { Roles } from "@common/decorators";
-import { JwtAuthGuard } from "@common/guard/jwt-auth.guard";
 import {
 	Body,
 	Controller,
@@ -19,16 +17,22 @@ import { Request, Response } from "express";
 import { AssignMenuDto } from "./dto/assign-menus.dto";
 import { AssignPermissionDto } from "./dto/assign-permission.dto";
 import { UsersService } from "./users.service";
+import { JwtAuthGuard } from "@common/guard/jwt-auth.guard";
+import { RolesGuard } from "@common/guard/roles.guard";
+import { Roles } from "@common/decorators";
+import { RolesEnum } from "@common/action";
 
 @Controller("users")
 @ApiTags("Users")
 @ApiBearerAuth()
+@UseGuards(RolesGuard)
 @UseGuards(JwtAuthGuard)
 export class UsersController {
 	constructor(private userService: UsersService) {}
 
 	@Get("profile")
 	@Version("1")
+	@Roles(RolesEnum.ADMIN)
 	@HttpCode(HttpStatus.OK)
 	async profile(@Req() req: Request, @Res() res: Response) {
 		const result = req.user
@@ -40,8 +44,8 @@ export class UsersController {
 		})
 	}
 
-    @Roles('admin')
     @Post('assign-permissions')
+    @Roles(RolesEnum.ADMIN)
     @Version("1")
     @HttpCode(HttpStatus.CREATED)
     @UsePipes(new ValidationPipe({ transform: true }))
@@ -58,8 +62,8 @@ export class UsersController {
 		})
     }
 
-    @Roles('Admin')
     @Post('assign-menus')
+    @Roles(RolesEnum.ADMIN)
     @Version("1")
     @HttpCode(HttpStatus.CREATED)
     @UsePipes(new ValidationPipe({ transform: true }))

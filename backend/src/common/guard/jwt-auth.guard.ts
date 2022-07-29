@@ -13,8 +13,6 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
 	}
 
 	canActivate(context: ExecutionContext) {
-		this.logger.verbose("canActive:")
-
 		let token: string
 		const request = context.switchToHttp().getRequest()
 		const response = context.switchToHttp().getResponse()
