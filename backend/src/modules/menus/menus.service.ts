@@ -27,13 +27,8 @@ export class MenusService {
 		return await this.menuRepository.save(menu)
 	}
 
-	async findAll(userId: string) {
-		return await this.menuRepository.query(
-			`select m.* from users_menus um
-				left join menus m on um.menu_id = m.id
-				where m.is_active = true and um.user_id = ?`,
-			[userId]
-		)
+	async findAll() {
+		return await this.menuRepository.find()
 	}
 
 	async findOne(menuId: number) {

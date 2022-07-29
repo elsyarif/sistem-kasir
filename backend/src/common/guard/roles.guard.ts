@@ -2,7 +2,6 @@ import { IS_PUBLIC_KEY, ROLES_KEY } from "@common/decorators"
 import { CanActivate, ExecutionContext, Injectable, Logger } from "@nestjs/common"
 import { Reflector } from "@nestjs/core"
 import { Roles } from "@entities/roles.entity"
-import { RolesEnum } from "@common/action"
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -24,8 +23,6 @@ export class RolesGuard implements CanActivate {
 		if (isPublic) {
 			return true
 		}
-
-		this.logger.verbose(requiredRoles)
 
 		if (!requiredRoles) {
 			return false

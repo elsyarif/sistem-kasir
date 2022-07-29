@@ -45,13 +45,11 @@ export class AuthService {
 	}
 
 	async login(user: any): Promise<any> {
-		const permission = await this.getPermissions(user.id)
 
 		const payload = {
 			id: user.id,
 			username: user.username,
-			role: user.role.name,
-			permissions: permission
+			role: user.role.name
 		}
 
 		return {
@@ -96,8 +94,7 @@ export class AuthService {
 		const payload = {
 			id: user.id,
 			username: user.username,
-			role: rol.name,
-			permissions: permission
+			role: rol.name
 		}
 
 		const access_token = this.jwtService.sign(payload)

@@ -1,45 +1,61 @@
-import { RolesEnum } from "@common/action";
-import { PERMISSIONS_KEY } from "@common/decorators";
-import { UsersService } from "@modules/users/users.service";
-import { CanActivate, ExecutionContext, Injectable, Logger } from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
+import { RolesEnum } from "@common/action"
+import { PERMISSIONS_KEY } from "@common/decorators"
+import {
+	CanActivate,
+	ExecutionContext,
+	Injectable,
+	Logger
+} from "@nestjs/common"
+import { Reflector } from "@nestjs/core"
+import { DataSource, Repository } from "typeorm"
+import { UsersPermissions } from "@entities/users-permissions.entity"
 
-interface Permissions{}
+interface Permissions {}
 
 @Injectable()
-export class PermissionsGuard implements CanActivate{
+export class PermissionsGuard implements CanActivate {
 	private readonly logger = new Logger(PermissionsGuard.name)
 
-	constructor(
-		private reflector: Reflector, 
-		private userService: UsersService
-	) {}
+	constructor(private reflector: Reflector, private dataSource: DataSource) {}
 
-	canActivate(context: ExecutionContext): boolean {
-	    const {user}   = context.switchToHttp().getRequest()
+	async canActivate(context: ExecutionContext): Promise<boolean> {
+		const dataSource = this.dataSource.createQueryRunner()
+		const { user } = context.switchToHttp().getRequest()
 
-	    const requiredPermissions = this.reflector.getAllAndOverride<Permissions[]>(
-			PERMISSIONS_KEY,[
-				context.getHandler(),
-				context.getClass()
-			],
-		);
+		let arrPermission = []
 
-		if(user.role === RolesEnum.ADMIN){
-			console.log('isAdmin :', user.role)
+		const requiredPermissions = this.reflector.getAllAndOverride<
+			Permissions[]
+		>(PERMISSIONS_KEY, [context.getHandler(), context.getClass()])
+
+		const permissions = await dataSource.manager
+			.getRepository(UsersPermissions)
+			.query(
+				`SELECT p.id, p.name, m.meta_title
+						  FROM users_permissions up
+						LEFT JOIN permissions p ON up.permission_id = p.id
+						INNER JOIN menus m ON up.menu_id = m.id
+			          	WHERE up.user_id = ?`,
+				[user.id]
+			)
+
+		for (let i = 0; i < permissions.length; i++) {
+			arrPermission.push(
+				permissions[i].meta_title + "." + permissions[i].name
+			)
+		}
+
+		if (user.role === RolesEnum.ADMIN) {
+			console.log("isAdmin :", user.role)
 			return true
 		}
 
-		if(!requiredPermissions){
+		if (!requiredPermissions) {
 			return false
 		}
 
-	    const resut = requiredPermissions.some((permissions) => {
-			console.log(permissions)
-			return user.permissions?.includes(permissions)
+		return requiredPermissions.some((permissions) => {
+			return arrPermission?.includes(permissions)
 		})
-
-		console.log('pers:',resut)
-		return resut
 	}
 }

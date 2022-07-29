@@ -7,9 +7,6 @@ import { Permissions } from "@entities/permissions.entity"
 import { UsersPermissions } from "@entities/users-permissions.entity"
 import { UsersController } from "./users.controller"
 import { UsersMenus } from "@entities/users-menus.entity"
-import { APP_GUARD } from "@nestjs/core"
-import { PermissionsGuard } from "@common/guard/permissions.guard"
-import { RolesGuard } from '../../common/guard/roles.guard';
 
 @Module({
 	imports: [
@@ -22,9 +19,7 @@ import { RolesGuard } from '../../common/guard/roles.guard';
 		])
 	],
 	exports: [TypeOrmModule],
-	providers: [
-		UsersService,
-	],
+	providers: [UsersService],
 	controllers: [UsersController]
 })
 export class UsersModule {}
