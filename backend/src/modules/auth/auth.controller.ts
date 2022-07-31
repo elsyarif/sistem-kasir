@@ -110,6 +110,7 @@ export class AuthController {
 		})
 	}
 
+	@Public()
 	@Post("refresh-token")
 	@Version("1")
 	@HttpCode(HttpStatus.OK)
@@ -124,7 +125,9 @@ export class AuthController {
 		res.json({
 			statusCode: HttpStatus.OK,
 			message: "new access token created",
-			data: token
+			data: {
+				access_token : token
+			}
 		})
 	}
 
