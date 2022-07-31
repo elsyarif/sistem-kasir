@@ -1,35 +1,54 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
-import { Header } from './components'
+import { lazy } from 'react'
+import {  Routes, Route, Navigate } from 'react-router-dom'
+import { RequireAuth } from './helpers/auth'
+import { AuthProvider } from './helpers/authProvider'
+import MainLayout from './layouts/mainLayout'
+
+const  Login = lazy(() => import("./pages/login"))
+const  Categories = lazy(() => import("./pages/categories"))
+const  Customers = lazy(() => import("./pages/customers"))
+const  Dashboard = lazy(() => import("./pages/dashboard"))
+const  Discount = lazy(() => import("./pages/discount"))
+const  Menus = lazy(() => import("./pages/menus"))
+const  Orders = lazy(() => import("./pages/orders"))
+const  Permissions = lazy(() => import("./pages/permissions"))
+const  Product = lazy(() => import("./pages/product"))
+const  Roles = lazy(() => import("./pages/roles"))
+const  Suppliers = lazy(() => import("./pages/suppliers"))
+const  Users = lazy(() => import("./pages/users"))
+const  PageNotFound = lazy(() => import("./pages/404"))
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className="App">
-      <Header/>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    <AuthProvider>
+      <Routes>
+        <Route path='/login' element={<Login/>} />
+
+        <Route path='/' element={ <RequireAuth> <MainLayout/> </RequireAuth>}>
+          <Route path='/' element={<Navigate to="/dashboard"/>}/>
+          <Route path='/dashboard' element={<Dashboard/>} />
+          <Route path='/customers' element={<Customers/>} />
+
+          <Route path='/catalog' >
+            <Route path='categories' index element={<Categories/>}/>
+            <Route path='product'  element={<Product/>}/>
+          </Route>
+
+          <Route path='/master' >
+            <Route path='menus' index element={<Menus/>}/>
+            <Route path='permissions' element={<Permissions/>}/>
+            <Route path='roles' element={<Roles/>}/>
+          </Route>
+
+          <Route path='/seller' element={<Orders/>}/>
+          <Route path='/discount' element={<Discount/>}/>
+          <Route path='/suppliers' element={<Suppliers/>}/>
+          <Route path='/users' element={<Users/>}/>
+        </Route>
+
+        <Route path='*' element={<PageNotFound/>}/>
+      </Routes>
+    </AuthProvider>
   )
 }
 
