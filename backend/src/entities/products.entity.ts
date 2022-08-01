@@ -11,6 +11,7 @@ import {
 import { Users } from "@entities/users.entity";
 import slug from "slug";
 import { Categories } from "@entities/categories.entity";
+import { UsersGroup } from "@entities/users_group.entity";
 
 @Entity()
 export class Products {
@@ -101,6 +102,14 @@ export class Products {
 
 	@DeleteDateColumn()
 	delete_at: Date;
+
+	@ManyToOne(() => UsersGroup, (group) => group.id)
+	@JoinColumn({
+		name: "group_id",
+		referencedColumnName: "id",
+		foreignKeyConstraintName: "fk_product_user_group"
+	})
+	group: string
 
 	@AfterInsert()
 	assignSlug() {

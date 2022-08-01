@@ -34,4 +34,10 @@ export class UsersTokens {
 		length: 30
 	})
 	ip: string
+
+	@Column({
+		type: 'varchar',
+		length: 50
+	})
+	user_agent: string
 }

@@ -1,4 +1,6 @@
 import {
+	AfterInsert,
+	Column,
 	Entity,
 	JoinColumn,
 	ManyToOne,
@@ -36,4 +38,15 @@ export class UsersPermissions {
 		foreignKeyConstraintName: 'fk_user_permissions'
 	})
 	permission: string;
+
+	@Column({
+		type: "varchar",
+		length: 50
+	})
+	access_name: string
+
+	@AfterInsert()
+	assignAccess(menu, permission) {
+		this.access_name = `${menu}.${permission}`
+	}
 }

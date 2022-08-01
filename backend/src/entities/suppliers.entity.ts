@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { UsersGroup } from "@entities/users_group.entity";
 
 @Entity()
 export class Suppliers{
@@ -27,4 +28,12 @@ export class Suppliers{
 		type: "varchar"
 	})
 	phone: string;
+
+	@ManyToOne(() => UsersGroup, (group) => group.id)
+	@JoinColumn({
+		name: "group_id",
+		referencedColumnName: "id",
+		foreignKeyConstraintName: "fk_supplier_user_group"
+	})
+	group: string
 }

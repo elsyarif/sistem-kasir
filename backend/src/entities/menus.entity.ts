@@ -1,19 +1,27 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import * as slug from "slug";
+import {
+	BeforeInsert,
+	Column,
+	Entity,
+	JoinColumn,
+	OneToMany,
+	PrimaryGeneratedColumn
+} from "typeorm"
+import * as slug from "slug"
+import { UsersGroup } from "@entities/users_group.entity"
 
 @Entity()
 export class Menus {
 	@PrimaryGeneratedColumn()
-	id: number;
+	id: number
 
 	@Column()
-	parent_id: number;
+	parent_id: number
 
 	@Column({
 		type: "varchar",
 		length: 50
 	})
-	title: string;
+	title: string
 
 	@Column({
 		type: "varchar",
@@ -25,24 +33,24 @@ export class Menus {
 		type: "varchar",
 		length: 50
 	})
-	icon: string;
+	icon: string
 
 	@Column({
 		type: "varchar"
 	})
-	link: string;
+	link: string
 
 	@Column()
-	sort: number;
+	sort: number
 
 	@Column({
 		type: "boolean",
 		default: true
 	})
-	is_active: boolean;
+	is_active: boolean
 
 	@BeforeInsert()
-	assignMetaTitle(){
+	assignMetaTitle() {
 		this.meta_title = slug(this.title)
 	}
 }
