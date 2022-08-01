@@ -8,9 +8,9 @@ import {
 	Post,
 	Req,
 	Res,
-	UseGuards,
+	UseGuards, UsePipes, ValidationPipe,
 	Version
-} from "@nestjs/common"
+} from "@nestjs/common";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger"
 import { Public } from "@common/decorators"
 import { AuthService } from "@modules/auth/auth.service"
@@ -91,6 +91,7 @@ export class AuthController {
 	@Post("register")
 	@Version("1")
 	@HttpCode(HttpStatus.CREATED)
+	@UsePipes(new ValidationPipe({transform: true}))
 	@ApiResponse({
 		status: HttpStatus.OK,
 		description: "User register success"

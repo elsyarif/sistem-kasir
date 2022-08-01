@@ -46,7 +46,7 @@ export class UsersService {
 		})
 
 		if (exist) {
-			throw new ConflictException()
+			throw new ConflictException('username already taken!')
 		}
 
 		try {
@@ -56,6 +56,7 @@ export class UsersService {
 			user.password = registerDto.password
 			await user.hashPassword()
 			user.role = null
+			user.group = null // add group
 			user.is_active = false
 
 			return await this.userRepository.save(user)
