@@ -18,6 +18,8 @@ import { UsersPermissions } from "@entities/users-permissions.entity"
 import { AssignMenuDto } from "@modules/users/dto/assign-menus.dto"
 import { UsersMenus } from "@entities/users-menus.entity"
 import { AssignPermissionDto } from "@modules/users/dto/assign-permission.dto"
+import { UsersGroup } from "@entities/users_group.entity"
+import { CreateUserGroupDto } from "@modules/users/dto/create-usergroups.dto"
 
 @Injectable()
 export class UsersService {
@@ -32,6 +34,8 @@ export class UsersService {
 		private permissionRepository: Repository<UsersPermissions>,
 		@InjectRepository(UsersMenus)
 		private userMenuRepository: Repository<UsersMenus>,
+		@InjectRepository(UsersGroup)
+		private groupRepository: Repository<UsersGroup>,
 		private dataSource: DataSource
 	) {}
 
@@ -52,6 +56,7 @@ export class UsersService {
 		try {
 			const user = new Users()
 			user.name = registerDto.name
+			user.email = registerDto.email
 			user.username = registerDto.username
 			user.password = registerDto.password
 			await user.hashPassword()
@@ -262,10 +267,22 @@ export class UsersService {
 
 	//TODO: save user menus
 	async assignPermissionsUser(assignDto: AssignPermissionDto) {
+
+		const menu = await this.permissionRepository.query(
+			`SELECT m.meta_title FROM menus m WHERE m.id = ?`,
+			 [assignDto.menu_id]
+		)
+
+		const pers = await this.permissionRepository.query(
+			`SELECT p.name FROM permissions p WHERE p.id = ?`,
+			 [assignDto.permission_id]
+		)
+
 		const permission = new UsersPermissions()
 		permission.user = assignDto.user_id
 		permission.menu = assignDto.menu_id
 		permission.permission = assignDto.permission_id
+		permission.assignAccess(menu.meta_title, pers.name)
 
 		return await this.permissionRepository.save(permission)
 	}
@@ -277,5 +294,14 @@ export class UsersService {
 		menu.menu = assignDto.menu_id
 
 		return await this.userMenuRepository.save(menu)
+	}
+
+	//TODO: create a user group 
+	async createUserGroup(usergroupDto: CreateUserGroupDto){
+		const usergroup = new UsersGroup()
+		usergroup.name = usergroupDto.name
+		usergroup.description = usergroup.description
+
+		return await this.groupRepository.save(usergroup)
 	}
 }

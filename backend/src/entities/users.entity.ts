@@ -21,7 +21,14 @@ export class Users {
 	name: string
 
 	@Column({
-		unique: true
+		unique: true,
+		length: 35
+	})
+	email: string
+
+	@Column({
+		unique: true,
+		length: 35
 	})
 	username: string
 

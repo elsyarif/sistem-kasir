@@ -7,6 +7,7 @@ import { Permissions } from "@entities/permissions.entity"
 import { UsersPermissions } from "@entities/users-permissions.entity"
 import { UsersController } from "./users.controller"
 import { UsersMenus } from "@entities/users-menus.entity"
+import { UsersGroup } from "@entities/users_group.entity"
 
 @Module({
 	imports: [
@@ -15,7 +16,8 @@ import { UsersMenus } from "@entities/users-menus.entity"
 			UsersTokens,
 			UsersPermissions,
 			UsersMenus,
-			Permissions
+			Permissions,
+			UsersGroup
 		])
 	],
 	exports: [TypeOrmModule],
