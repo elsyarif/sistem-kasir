@@ -67,7 +67,11 @@ export class UsersController {
 	@UseGuards(RolesGuard)
 	@Roles(RolesEnum.ADMIN)
 	@HttpCode(HttpStatus.CREATED)
-	@UsePipes(new ValidationPipe({ transform: true }))
+	@UsePipes(
+		new ValidationPipe({
+			transform: false
+		})
+	)
 	async assignUserMenu(
 		@Body() assignDto: AssignMenuDto,
 		@Req() req: Request,
