@@ -143,6 +143,7 @@ export class UsersService {
 			newUserToken.access_token = tokenDto.access_token
 			newUserToken.refresh_token = tokenDto.refresh_token
 			newUserToken.ip = tokenDto.ip
+			newUserToken.user_agent = tokenDto.user_agent
 
 			await userToken.save(newUserToken)
 			await dataSource.commitTransaction()
@@ -171,9 +172,9 @@ export class UsersService {
 			})
 
 			tokenUser.access_token = tokenDto.access_token
-			tokenUser.refresh_token =
-				tokenDto.refresh_token || tokenUser.refresh_token
-			tokenUser.ip = tokenDto.ip || tokenUser.ip
+			tokenUser.refresh_token = tokenDto.refresh_token
+			tokenUser.ip = tokenDto.ip
+			tokenUser.user_agent = tokenDto.user_agent
 
 			await userToken.save(tokenUser)
 			await dataSource.commitTransaction()
@@ -296,7 +297,7 @@ export class UsersService {
 		return await this.userMenuRepository.save(menu)
 	}
 
-	//TODO: create a user group 
+	//TODO: create a user group
 	async createUserGroup(usergroupDto: CreateUserGroupDto){
 		const usergroup = new UsersGroup()
 		usergroup.name = usergroupDto.name

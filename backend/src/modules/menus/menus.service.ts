@@ -38,8 +38,8 @@ export class MenusService {
 			}
 		})
 
-		if(!menu){
-			throw new NotFoundException('menu not found')
+		if (!menu) {
+			throw new NotFoundException("menu not found")
 		}
 
 		return menu
@@ -55,7 +55,10 @@ export class MenusService {
 		menu.title = updateDto.title || menu.title
 		menu.icon = updateDto.icon || menu.icon
 		menu.link = updateDto.link || menu.link
-		menu.is_active = updateDto.is_active !== undefined ?  updateDto.is_active : menu.is_active
+		menu.is_active =
+			updateDto.is_active !== undefined
+				? updateDto.is_active
+				: menu.is_active
 		menu.sort = updateDto.sort || menu.sort
 		menu.assignMetaTitle()
 
@@ -74,7 +77,7 @@ export class MenusService {
 		return sort.n
 	}
 
-	async findMenuByUser(userId: string){
+	async findMenuByUser(userId: string) {
 		try {
 			const userMenu = await this.menuRepository.query(
 				`SELECT m.id, m.parent_id , m.title, m.meta_title, m.icon, m.link, m.sort
@@ -82,7 +85,8 @@ export class MenusService {
 				left Join menus m ON um.menu_id = m.id
 				WHERE m.is_active = TRUE
 				AND um.user_id = ?
-				ORDER BY m.sort`, [userId]
+				ORDER BY m.sort`,
+				[userId]
 			)
 
 			const mainMenu = []
@@ -94,26 +98,56 @@ export class MenusService {
 					meta_title: userMenu[i].meta_title,
 					icon: userMenu[i].icon,
 					link: userMenu[i].link,
-					sort: userMenu[i].sort,
+					sort: userMenu[i].sort
 				}
 			}
 
 			return this.menuNode(mainMenu, 0)
-
 		} catch (error) {
 			this.logger.error(`findMenuByUser: ${error.message}`)
 		}
 	}
 
+	async roleMenus(roleId: string) {
+		try {
+			const userMenus = await this.menuRepository.query(
+				`SELECT m.* FROM roles_menus rm
+						INNER JOIN menus m on rm.menu_id = m.id
+						WHERE m.is_active = TRUE
+						 AND rm.role_id = ?
+						ORDER BY m.sort `,
+				[roleId]
+			)
+
+			let mainMenu = []
+			for (let i = 0; i < userMenus.length; i++) {
+				mainMenu[userMenus[i].id] = {
+					id: userMenus[i].id,
+					parent_id: userMenus[i].parent_id,
+					title: userMenus[i].title,
+					meta_title: userMenus[i].meta_title,
+					icon: userMenus[i].icon,
+					link: userMenus[i].link,
+					sort: userMenus[i].sort
+				}
+			}
+
+			return this.menuNode(mainMenu, 0)
+		} catch (error) {
+			this.logger.error(`roleMenus: ${error.message}`)
+		}
+	}
 
 	//TODO: Maping menu berdasarkan parent id dan menjadikan object
-	menuNode(menu: any[], parent: number){
+	menuNode(menu: any[], parent: number) {
 		const mainMenu = []
 
 		for (let i = 1; i < menu.length; i++) {
-			if(menu[i] == undefined) {i++}
+			if (menu[i] == undefined) {
+				i++
+			}
 
-			if(menu[i] != undefined && menu[i].parent_id === parent){
+			if (menu[i] != undefined && menu[i].parent_id === parent) {
 				mainMenu.push({
 					id: menu[i].id,
 					parent_id: menu[i].parent_id,

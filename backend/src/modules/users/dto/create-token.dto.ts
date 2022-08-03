@@ -4,4 +4,5 @@ export class CreateTokenDto {
 	access_token: string
 	refresh_token: string
 	ip?: string
+	user_agent?: string
 }

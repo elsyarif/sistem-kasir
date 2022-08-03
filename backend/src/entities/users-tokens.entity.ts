@@ -37,7 +37,7 @@ export class UsersTokens {
 
 	@Column({
 		type: 'varchar',
-		length: 50
+		length: 250
 	})
 	user_agent: string
 }

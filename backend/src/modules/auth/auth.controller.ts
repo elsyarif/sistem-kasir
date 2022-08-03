@@ -8,9 +8,11 @@ import {
 	Post,
 	Req,
 	Res,
-	UseGuards, UsePipes, ValidationPipe,
+	UseGuards,
+	UsePipes,
+	ValidationPipe,
 	Version
-} from "@nestjs/common";
+} from "@nestjs/common"
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger"
 import { Public } from "@common/decorators"
 import { AuthService } from "@modules/auth/auth.service"
@@ -28,7 +30,7 @@ import { JwtAuthGuard } from "@common/guard/jwt-auth.guard"
 export class AuthController {
 	constructor(
 		private authService: AuthService,
-		private userService: UsersService
+		private userService: UsersService,
 	) {}
 
 	@Public()
@@ -57,6 +59,7 @@ export class AuthController {
 			id: user.id,
 			username: user.username,
 			ip: req.ip,
+			user_agent: req.headers["user-agent"],
 			access_token: Encrypt(jwt.access_token),
 			refresh_token: Encrypt(jwt.refresh_token),
 			cookie_token: req.cookies["x-refresh-token"] || ""
@@ -91,7 +94,7 @@ export class AuthController {
 	@Post("register")
 	@Version("1")
 	@HttpCode(HttpStatus.CREATED)
-	@UsePipes(new ValidationPipe({transform: true}))
+	@UsePipes(new ValidationPipe({ transform: true }))
 	@ApiResponse({
 		status: HttpStatus.OK,
 		description: "User register success"
@@ -127,7 +130,7 @@ export class AuthController {
 			statusCode: HttpStatus.OK,
 			message: "new access token created",
 			data: {
-				access_token : token
+				access_token: token
 			}
 		})
 	}

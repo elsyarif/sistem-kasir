@@ -55,7 +55,7 @@ export class MenusController {
 
 	@Get()
 	@Version("1")
-	@HttpCode(HttpStatus.CREATED)
+	@HttpCode(HttpStatus.OK)
 	async findAll(@Req() req: Request, @Res() res: Response) {
 		const user: any = req.user
 		const menu = await this.menuService.findMenuByUser(user.id)
@@ -130,6 +130,20 @@ export class MenusController {
 		res.json({
 			statusCode: HttpStatus.OK,
 			message: "Disable Menu success",
+			data: menu
+		})
+	}
+
+	@Get('access')
+	@Version("1")
+	@HttpCode(HttpStatus.OK)
+	async menus(@Req() req: Request, @Res() res: Response){
+		const user:any = req.user
+		const menu = await this.menuService.roleMenus(user.role)
+
+		res.json({
+			statusCode: HttpStatus.OK,
+			message: "Menu List success",
 			data: menu
 		})
 	}
