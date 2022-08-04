@@ -305,4 +305,13 @@ export class UsersService {
 
 		return await this.groupRepository.save(usergroup)
 	}
+
+	async getUserGroup(){
+		return await this.groupRepository.find({
+			order: {
+				name: 'ASC'
+			}
+		})
+	}
+
 }

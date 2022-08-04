@@ -85,4 +85,20 @@ export class UsersController {
 			data: result
 		})
 	}
+
+	@Get('group')
+	@Version("1")
+	@HttpCode(HttpStatus.OK)
+	async groupList(
+		@Req() req: Request,
+		@Res() res: Response
+	){
+		const group = await this.userService.getUserGroup()
+
+		res.json({
+			statusCode: HttpStatus.OK,
+			message: 'user Group list',
+			data: group
+		})
+	}
 }
