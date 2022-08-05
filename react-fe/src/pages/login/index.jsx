@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
     Box,
     Button, Checkbox,
@@ -11,13 +11,25 @@ import {
     useColorModeValue
 } from '@chakra-ui/react'
 import {PasswordField} from "../../components/index";
-import { Formik } from 'formik'
-import API from '../../services/api';
-import { useDispatch } from 'react-redux';
-import { login } from '../../features/auth/authSlice';
+import { Formik, replace } from 'formik'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { authSelector, login } from '../../features/auth/authSlice';
+import { useAuth } from '../../helpers/authProvider';
 
 const Login = () => {
-  const dispatch = useDispatch()
+    const auth = useAuth()
+    const dispatch = useDispatch();
+    const Navigate = useNavigate()
+
+    const { user, isLoggedIn } = useSelector(authSelector);
+
+    useEffect(() => {
+        if(isLoggedIn){
+            auth.Signin(user.username)
+            Navigate('/', {replace: true}) 
+        }
+    }, [auth]);
 
   return (
     <Container  maxW="lg" py={{ base: '12', md: '24' }} px={{ base: '0', sm: '8' }}>
@@ -47,7 +59,7 @@ const Login = () => {
          <Stack spacing={6}>
              <Stack spacing={5}>
                  <Formik
-                    initialValues={{username: '', password: ''}}
+                    initialValues={{username: '', password: '', remeber: false}}
                     validate={values => {
                         const errors = {}
                         if(!values.username){
@@ -90,7 +102,11 @@ const Login = () => {
                              <Stack spacing={6} my={5}>
                                  <Stack spacing={8}>
                                      <HStack spacing={10} justify="space-between">
-                                         <Checkbox defaultChecked>Remember me</Checkbox>
+                                         <Checkbox 
+                                            id='remember' 
+                                            name="remember" 
+                                            onChange={handleChange} 
+                                        >Remember me</Checkbox>
                                          <Button size="sm" variant="link" colorScheme="blue">
                                              forgot password?
                                          </Button>

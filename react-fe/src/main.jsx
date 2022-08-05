@@ -6,18 +6,19 @@ import App from "./App";
 import { themes } from "./themes";
 import "./index.css";
 import { Provider } from 'react-redux'
-import { store } from "./app/store"
+import { PersistGate } from 'redux-persist/integration/react'
+import { persistor, store } from "./app/store"
 
 const theme = extendTheme({themes})
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <ChakraProvider>
-          <App />
-        </ChakraProvider>
-      </BrowserRouter>
+    <Provider store={store} >
+      {/* <PersistGate persistor={persistor}> */}
+        <BrowserRouter>
+          <ChakraProvider>
+            <App />
+          </ChakraProvider>
+        </BrowserRouter>
+      {/* </PersistGate> */}
     </Provider>
-  </React.StrictMode>
 );

@@ -7,11 +7,16 @@ export const register =  createAsyncThunk(
 
 export const login = createAsyncThunk(
     'auth/login',
-    async({ formData }, thunkAPI) => {
+    async({ username, password, remember }, thunkAPI) => {
+        debugger
        try {
-            const data = await AuthService.login(formData)
-            console.log(data)
-            return data.data
+            const response = await AuthService.login({ username, password })
+            if(remember){
+                localStorage.setItem('gxg-hasn', response.data.data.access_token)
+            }else{
+                sessionStorage.setItem('gxg-hasn', response.data.data.access_token)
+            }
+            return response.data.data
        } catch (error) {
             return thunkAPI.rejectWithValue();
        } 
@@ -26,16 +31,18 @@ const initialState = {
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
-    extraReducers: {
-        [login.fulfilled] : (state, action) => {
+    extraReducers: (builder) =>{
+        builder.addCase(login.fulfilled, (state, action) => {
+            debugger
+            const { create_at, is_active, update_at, ...result} = action.payload
             state.isLoggedIn = true
-            state.user = action.payload.data
-        },
-        [login.rejected] : (state, action) => {
+            state.user = result
+        })
+        builder.addCase(login.rejected, (state, action) => {
             state.isLoggedIn = false
             state.user = null
-        }
+        })
     }
 })
-
+export const authSelector = (state) => state.auth
 export default authSlice.reducer

@@ -3,8 +3,8 @@ import { useAuth } from "./authProvider";
 
 export const RequireAuth = ({ children }) => {
   const auth = useAuth();
-
-  if (!auth.user) {
+  console.log('RequireAuth', auth)
+  if (!auth.isUser) {
     return <Navigate to="/login" replace />;
   }
   return children;
