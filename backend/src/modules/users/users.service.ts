@@ -168,7 +168,7 @@ export class UsersService {
 
 		try {
 			const tokenUser = await userToken.findOneBy({
-				refresh_token: tokenDto.refresh_token
+				refresh_token: tokenDto.cookie_token
 			})
 
 			tokenUser.access_token = tokenDto.access_token
@@ -181,7 +181,7 @@ export class UsersService {
 
 			return tokenUser
 		} catch (e) {
-			this.logger.error(`${UsersService.name} : saveToken`, e.message)
+			this.logger.error(`${UsersService.name} : update`, e.message)
 			await dataSource.rollbackTransaction()
 		} finally {
 			await dataSource.release()

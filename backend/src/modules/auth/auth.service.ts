@@ -28,7 +28,6 @@ export class AuthService {
 	) {}
 
 	async validateUser(loginDto: LoginAuthDto): Promise<IUser> {
-		this.logger.verbose(`validation`)
 		const user = await this.userService.findOne(loginDto.username)
 
 		if (!user.is_active) {
