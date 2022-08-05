@@ -2,7 +2,7 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true
 const API = axios.create({
-    baseURL: 'http://localhost:5000',
+    baseURL: 'http://localhost:3000',
     headers: {
         "Content-Type": "application/json",
     }
@@ -26,8 +26,8 @@ API.interceptors.response.use((res) => {
             originalConfig._retry = true;
             try {
                 const rs = await API.post('/v1/auth/refresh-token')
-                const {accessToken} = rs.data.data
-                localStorage.setItem('gxg-hasn', accessToken)
+                const {access_token} = rs.data.data
+                localStorage.setItem('gxg-hasn', access_token)
 
                 return API(originalConfig)
             } catch (err) {

@@ -12,8 +12,12 @@ import {
 } from '@chakra-ui/react'
 import {PasswordField} from "../../components/index";
 import { Formik } from 'formik'
+import API from '../../services/api';
+import { useDispatch } from 'react-redux';
+import { login } from '../../features/auth/authSlice';
 
 const Login = () => {
+  const dispatch = useDispatch()
 
   return (
     <Container  maxW="lg" py={{ base: '12', md: '24' }} px={{ base: '0', sm: '8' }}>
@@ -57,7 +61,7 @@ const Login = () => {
                         return errors
                     }}
                     onSubmit={(values, {setSubmitting}) => {
-                        console.log('Submitting', values)
+                        dispatch(login(values))
                         setSubmitting= true
                     }}
                  >
