@@ -1,6 +1,6 @@
 import { NestFactory } from "@nestjs/core"
 import { AppModule } from "./app.module"
-import { VersioningType } from "@nestjs/common"
+import { BadRequestException, VersioningType } from "@nestjs/common"
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
 import * as cookieParser from "cookie-parser"
 import helmet from "helmet"
@@ -14,7 +14,17 @@ async function bootstrap() {
 		type: VersioningType.URI
 	})
 
-	app.enableCors()
+	const whitelist = ['http://127.0.0.1:5173',]
+	app.enableCors({
+		origin: function(origin, calback){
+			if(whitelist.indexOf(origin) !== -1){
+				calback(null, true)
+			}else{
+				calback(new BadRequestException('Not allow by CORS'))
+			}
+		},
+		credentials: true
+	})
 	app.use(cookieParser())
 	app.use(helmet())
 
