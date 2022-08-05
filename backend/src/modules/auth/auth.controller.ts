@@ -5,6 +5,7 @@ import {
 	Delete,
 	HttpCode,
 	HttpStatus,
+	Logger,
 	Post,
 	Req,
 	Res,
@@ -28,9 +29,11 @@ import { JwtAuthGuard } from "@common/guard/jwt-auth.guard"
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class AuthController {
+	private readonly logger = new Logger(AuthController.name)
+
 	constructor(
 		private authService: AuthService,
-		private userService: UsersService,
+		private userService: UsersService
 	) {}
 
 	@Public()
@@ -50,6 +53,7 @@ export class AuthController {
 		@Req() req: Request,
 		@Res() res: Response
 	) {
+		this.logger.verbose(loginDto)
 		const user = await this.authService.validateUser(loginDto)
 
 		const jwt = await this.authService.login(user)
