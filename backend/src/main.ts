@@ -14,17 +14,18 @@ async function bootstrap() {
 		type: VersioningType.URI
 	})
 
-	const whitelist = ["http://127.0.0.1:3001", "http://localhost:3000"]
-	app.enableCors({
-		origin: function (origin, calback) {
+	const whitelist = ["http://127.0.0.1:3001", "http://localhost:3000", "http://127.0.0.1:3000"]
+	const corsOption = {
+		origin: function (origin, callback) {
 			if (whitelist.indexOf(origin) !== -1) {
-				calback(null, true)
+				callback(null, true)
 			} else {
-				calback(new BadRequestException("Not allow by CORS"))
+				callback(new BadRequestException("Not allow by CORS"))
 			}
 		},
 		credentials: true
-	})
+	}
+	app.enableCors(corsOption)
 	app.use(cookieParser())
 	app.use(helmet())
 

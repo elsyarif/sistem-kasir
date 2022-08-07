@@ -53,7 +53,6 @@ export class AuthController {
 		@Req() req: Request,
 		@Res() res: Response
 	) {
-		this.logger.verbose(loginDto)
 		const user = await this.authService.validateUser(loginDto)
 
 		const jwt = await this.authService.login(user)
@@ -82,7 +81,7 @@ export class AuthController {
 		res.cookie("x-refresh-token", Encrypt(jwt.refresh_token), {
 			httpOnly: true,
 			maxAge: 24 * 60 * 60 * 1000,
-			secure: process.env.NODE_ENV !== "development"
+			secure: false,
 		})
 
 		const { role, ...result } = user
@@ -146,7 +145,7 @@ export class AuthController {
 		const token = req.cookies["x-refresh-token"]
 
 		if (!token) {
-			throw new BadRequestException()
+			throw new BadRequestException('x-refresh-token not found')
 		}
 
 		req.user = null
