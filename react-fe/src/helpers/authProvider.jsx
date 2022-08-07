@@ -8,7 +8,7 @@ const AuthContex = createContext(null)
 export const AuthProvider = ({ children }) => {
   const { user } = useSelector(authSelector)
   const [isUser, setIsUser] = useState(user?.username)
-console.log('isUser' , isUser)
+
   const Signin = (isUser) => {
     setIsUser(isUser)
   }

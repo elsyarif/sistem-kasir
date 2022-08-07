@@ -9,6 +9,7 @@ const API = axios.create({
 });
 
 API.interceptors.request.use((req) =>{
+    debugger
     if (localStorage.getItem('gxg-hasn')){
         req.headers.Authorization = `Bearer ${localStorage.getItem('gxg-hasn')}`
         req.headers['x-refresh-token'] = localStorage.getItem('gxg-hasn')
@@ -26,6 +27,7 @@ API.interceptors.response.use((res) => {
             originalConfig._retry = true;
             try {
                 const rs = await API.post('/v1/auth/refresh-token')
+                console.log(rs)
                 const {access_token} = rs.data.data
                 localStorage.setItem('gxg-hasn', access_token)
 
