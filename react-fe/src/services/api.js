@@ -12,6 +12,11 @@ API.interceptors.request.use((req) =>{
     if (localStorage.getItem('gxg-hasn')){
         req.headers.Authorization = `Bearer ${localStorage.getItem('gxg-hasn')}`
     }
+
+    if(sessionStorage.getItem('gxg-hasn')){
+        req.headers.Authorization = `Bearer ${sessionStorage.getItem('gxg-hasn')}`
+    }
+
     return req
 })
 
@@ -25,10 +30,15 @@ API.interceptors.response.use((res) => {
             originalConfig._retry = true;
             try {
                 const rs = await API.post('/v1/auth/refresh-token')
-                console.log(rs)
                 const {access_token} = rs.data.data
-                localStorage.setItem('gxg-hasn', access_token)
 
+                if(localStorage.getItem('gxg-hasn')){
+                    localStorage.setItem('gxg-hasn', access_token)
+                }
+                
+                if(sessionStorage.getItem('gxg-hasn')){
+                    sessionStorage.setItem('gxg-hasn', access_token)
+                }
                 return API(originalConfig)
             } catch (err) {
                 return Promise.reject(err)

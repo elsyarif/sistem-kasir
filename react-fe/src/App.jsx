@@ -2,6 +2,7 @@ import { lazy } from 'react'
 import {  Routes, Route, Navigate } from 'react-router-dom'
 import { RequireAuth } from './helpers/auth'
 import { AuthProvider } from './helpers/authProvider'
+import AuthLayout from './layouts/authLayout'
 import MainLayout from './layouts/mainLayout'
 
 const  Login = lazy(() => import("./pages/login"))
@@ -22,7 +23,9 @@ function App() {
   return (
     <AuthProvider>
       <Routes>
-        <Route path='/login' element={<Login/>} />
+        <Route path='/login' element={<AuthLayout/>}>
+          <Route path='/login' index element={<Login/>} />
+        </Route>
 
         <Route path='/' element={ <RequireAuth> <MainLayout/> </RequireAuth>}>
           <Route path='/' element={<Navigate to="/dashboard"/>}/>

@@ -31,14 +31,6 @@ const PasswordField = forwardRef((props, ref) =>{
         <FormControl isRequired={isRequired} isInvalid={isInvalid}>
             <FormLabel htmlFor="password">Password</FormLabel>
             <InputGroup>
-                <InputRightElement>
-                    <IconButton
-                        variant="link"
-                        aria-label={isOpen? 'Mask password' : 'Reveal password'}
-                        icon={isOpen? <FaEyeSlash/> : <FaEye/> }
-                        onClick={onClickReveal}
-                    />
-                </InputRightElement>
                 <Input
                     id="password"
                     ref={mergeRef}
@@ -47,6 +39,14 @@ const PasswordField = forwardRef((props, ref) =>{
                     autoComplete="current-password"
                     required
                     {...rest}/>
+                 <InputRightElement>
+                    <IconButton
+                        variant="link"
+                        aria-label={isOpen? 'Mask password' : 'Reveal password'}
+                        icon={isOpen? <FaEyeSlash/> : <FaEye/> }
+                        onClick={onClickReveal}
+                    />
+                </InputRightElement>
             </InputGroup>
             <FormErrorMessage>{errorMessage}</FormErrorMessage>
         </FormControl>

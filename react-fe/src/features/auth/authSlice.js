@@ -15,6 +15,7 @@ export const login = createAsyncThunk(
             }else{
                 sessionStorage.setItem('gxg-hasn', response.data.data.access_token)
             }
+            response.data.data.remember = remember
             return response.data.data
        } catch (error) {
             return thunkAPI.rejectWithValue();
@@ -27,6 +28,15 @@ export const logout = createAsyncThunk(
     async(thunkAPI) => {
         try {
             const response = await AuthService.logout()
+            if(response.status === 200){
+                if(localStorage.getItem('gxg-hasn')){
+                    localStorage.removeItem('gxg-hasn')
+                }
+
+                if(sessionStorage.getItem('gxg-hasn')){
+                    sessionStorage.removeItem('gxg-hasn')
+                }
+            }
             return response.data
         } catch (error) {
             return thunkAPI.rejectWithValue();
@@ -42,6 +52,12 @@ const initialState = {
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
+    reducers: {
+        logoff:(state) => {
+            state.isLoggedIn = false
+            state.user = null
+        }
+    },
     extraReducers: (builder) =>{
         builder.addCase(login.fulfilled, (state, action) => {
             const { access_token, create_at, is_active, update_at, ...result} = action.payload
@@ -63,4 +79,5 @@ export const authSlice = createSlice({
     }
 })
 export const authSelector = (state) => state.auth
+export const { logoff } = authSlice.actions
 export default authSlice.reducer

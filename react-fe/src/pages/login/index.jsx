@@ -32,7 +32,7 @@ const Login = () => {
     }, [auth]);
 
   return (
-    <Container  maxW="lg" py={{ base: '12', md: '24' }} px={{ base: '0', sm: '8' }}>
+    <>
         <Stack spacing="8">
             <Stack spacing={6}>
                 {/*Logo*/}
@@ -123,7 +123,7 @@ const Login = () => {
              </Stack>
          </Stack>
       </Box>
-    </Container>
+    </>
   )
 }
 
