@@ -15,10 +15,11 @@ const Dashboard = () => {
 
   useEffect(() => {
     if(!isLoggedIn){
+      console.log('first')
       Navigae('/login', {replace: true})
       auth.SignOut()
     }
-  }, [auth])
+  }, [isLoggedIn])
 
   const handleLogout = () => {
     dispatch(logout())

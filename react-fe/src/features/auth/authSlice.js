@@ -44,8 +44,7 @@ export const authSlice = createSlice({
     initialState,
     extraReducers: (builder) =>{
         builder.addCase(login.fulfilled, (state, action) => {
-            debugger
-            const { create_at, is_active, update_at, ...result} = action.payload
+            const { access_token, create_at, is_active, update_at, ...result} = action.payload
             state.isLoggedIn = true
             state.user = result
         })

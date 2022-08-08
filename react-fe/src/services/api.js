@@ -9,7 +9,6 @@ const API = axios.create({
 });
 
 API.interceptors.request.use((req) =>{
-    debugger
     if (localStorage.getItem('gxg-hasn')){
         req.headers.Authorization = `Bearer ${localStorage.getItem('gxg-hasn')}`
     }

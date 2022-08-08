@@ -15,7 +15,7 @@ const header = () => {
         </Box>
         <Box
           justifyContent="flex-end">
-          {user.username}
+          {user?.username}
         </Box>
       </Flex>
       </Box>
