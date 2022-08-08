@@ -12,7 +12,6 @@ API.interceptors.request.use((req) =>{
     debugger
     if (localStorage.getItem('gxg-hasn')){
         req.headers.Authorization = `Bearer ${localStorage.getItem('gxg-hasn')}`
-        req.headers['x-refresh-token'] = localStorage.getItem('gxg-hasn')
     }
     return req
 })

@@ -1,12 +1,15 @@
 import React from 'react'
+import { Header } from '../components'
 import {Outlet} from 'react-router-dom'
+import { Box } from '@chakra-ui/react'
 
 const MainLayout = () => {
   return (
     <>
-      <main>
+      <Header/>
+      <Box px={12}>
         <Outlet/>
-      </main>
+      </Box>
     </>
   )
 }
