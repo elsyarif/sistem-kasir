@@ -14,7 +14,7 @@ async function bootstrap() {
 		type: VersioningType.URI
 	})
 
-	const whitelist = ["http://127.0.0.1:3001", "http://localhost:3000", "http://127.0.0.1:3000"]
+	const whitelist = ["http://127.0.0.1:3001", "http://localhost:3001", "http://localhost:3000", "http://127.0.0.1:3000"]
 	const corsOption = {
 		origin: function (origin, callback) {
 			if (whitelist.indexOf(origin) !== -1) {

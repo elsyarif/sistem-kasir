@@ -81,7 +81,6 @@ export class AuthController {
 		res.cookie("x-refresh-token", Encrypt(jwt.refresh_token), {
 			httpOnly: true,
 			maxAge: 24 * 60 * 60 * 1000,
-			secure: false,
 		})
 
 		const { role, ...result } = user
