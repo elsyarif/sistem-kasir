@@ -27,7 +27,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <Button colorScheme="blue" onClick={handleLogout}>Logout</Button>
+      <Button colorScheme="brand" onClick={handleLogout}>Logout</Button>
       <h1>Dashoboard</h1>
     </div>
   )

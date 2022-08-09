@@ -9,13 +9,12 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistor, store } from "./app/store"
 
-const theme = extendTheme({themes})
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <Provider store={store} >
       {/* <PersistGate persistor={persistor}> */}
         <BrowserRouter>
-          <ChakraProvider>
+          <ChakraProvider theme={themes}>
             <App />
           </ChakraProvider>
         </BrowserRouter>
