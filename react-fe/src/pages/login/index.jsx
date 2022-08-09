@@ -52,7 +52,7 @@ const Login = () => {
       <Box
           py={{base: '0', sm: '8'}}
           px={{base: '4', sm: '10'}}
-          bg={useBreakpointValue({base: 'transparent', sm: 'bg-surface'})}
+          bg={useBreakpointValue({base: 'white', sm: 'white'})}
           borderRadius={{base: '8', sm:'10'}}
           boxShadow={{ base: 'none', sm: useColorModeValue('md', 'md-dark') }}
       >

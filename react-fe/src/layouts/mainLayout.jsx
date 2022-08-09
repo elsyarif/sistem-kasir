@@ -23,12 +23,15 @@ const MainLayout = () => {
   }, [auth])
 
   return (
-    <>
-      <Header/>
-      <Box px={12}>
-        <Outlet/>
+    <Box>
+      <Box>Sidebar</Box>
+      <Box>
+        <Header/>
+        <Box px={12}>
+          <Outlet/>
+        </Box>
       </Box>
-    </>
+    </Box>
   )
 }
 

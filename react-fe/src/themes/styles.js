@@ -2,6 +2,9 @@ import { mode } from '@chakra-ui/theme-tools'
 
 export const globalStyles = {
     colors: {
+        white: {
+            500: '#ffffff'
+        },
         brand: {
             100: "#E9E3FF",
             200: "#422AFB",
