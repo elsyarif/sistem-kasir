@@ -1,0 +1,7 @@
+{
+    "Not_Empty" : "{property} tidak boleh kosong",
+    "Invalid_Email" : "email tidak valid",
+    "Invalid_Boolean" : "{property} bukan boolean",
+    "Min" : "{property} dengan nilai: \"{value}\" setidaknya harus {constraints.0}",
+    "Max": "{property} dengan nilai: \"{value}\" harus kurang dari {constraints.0}"
+}
