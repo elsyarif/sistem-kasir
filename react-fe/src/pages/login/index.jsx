@@ -113,7 +113,7 @@ const Login = () => {
                                      </HStack>
                                  </Stack>
                                  <Stack spacing={6}>
-                                     <Button type="submit" colorScheme="blue">Sign in</Button>
+                                     <Button type="submit" isLoading={isSubmitting} loadingText="Sign in" colorScheme="blue">Sign in</Button>
                                  </Stack>
                              </Stack>
                          </form>
