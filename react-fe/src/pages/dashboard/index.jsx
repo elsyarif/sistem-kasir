@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from '@chakra-ui/react'
+import { Box, Button } from '@chakra-ui/react'
 import { authSelector, logout } from '../../features/auth/authSlice';
 import { useAuth } from '../../helpers/authProvider';
 import { useNavigate } from 'react-router-dom';
@@ -26,10 +26,10 @@ const Dashboard = () => {
   }
 
   return (
-    <div>
+    <Box mt="75px">
       <Button colorScheme="brand" onClick={handleLogout}>Logout</Button>
       <h1>Dashoboard</h1>
-    </div>
+    </Box>
   )
 }
 
